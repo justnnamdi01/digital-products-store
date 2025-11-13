@@ -14,6 +14,8 @@ import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { getProductById } from "@/lib/products"
 import { encodeImageUrl } from "@/lib/utils/image-url"
+import { ProductImageGallery } from "@/components/product-image-gallery"
+import { hasImageGallery } from "@/lib/utils/product-images"
 
 export default function ProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -137,15 +139,19 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
               <Card className="sticky top-20">
                 <CardContent className="p-6 space-y-6">
-                  <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
-                    <Image
-                      src={product.image ? encodeImageUrl(product.image) : "/placeholder.svg"}
-                      alt={product.title}
-                      fill
-                      className="object-cover"
-                      unoptimized
-                    />
-                  </div>
+                  {hasImageGallery(product) ? (
+                    <ProductImageGallery product={product} autoRotateInterval={2000} />
+                  ) : (
+                    <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
+                      <Image
+                        src={product.image ? encodeImageUrl(product.image) : "/placeholder.svg"}
+                        alt={product.title}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                    </div>
+                  )}
 
                   <div>
                     <div className="text-3xl font-bold text-primary mb-2">${product.price}</div>
