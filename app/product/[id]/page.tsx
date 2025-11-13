@@ -145,12 +145,6 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                       className="object-cover"
                       unoptimized
                     />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                      <Button size="lg" variant="secondary" className="rounded-full">
-                        <Play className="h-5 w-5 mr-2" />
-                        Preview Course
-                      </Button>
-                    </div>
                   </div>
 
                   <div>
