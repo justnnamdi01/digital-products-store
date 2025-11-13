@@ -31,8 +31,9 @@ export function getProductImages(product: Product): string[] {
 
 /**
  * Check if a product should have an image gallery
+ * Now applies to all products
  */
 export function hasImageGallery(product: Product): boolean {
-  return product.category === "T-SHIRT DESIGN" || product.category === "RESELL BUNDLE"
+  return true // Enable gallery for all products
 }
 
