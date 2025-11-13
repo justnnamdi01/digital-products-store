@@ -138,10 +138,11 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                 <CardContent className="p-6 space-y-6">
                   <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
                     <Image
-                      src={product.image || "/placeholder.svg"}
+                      src={product.image ? encodeURI(product.image) : "/placeholder.svg"}
                       alt={product.title}
                       fill
                       className="object-cover"
+                      unoptimized
                     />
                     <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                       <Button size="lg" variant="secondary" className="rounded-full">

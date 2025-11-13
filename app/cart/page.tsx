@@ -77,7 +77,7 @@ export default function CartPage() {
                   <CardContent className="p-4">
                     <div className="flex gap-4">
                       <div className="relative w-24 h-24 flex-shrink-0 rounded-md overflow-hidden bg-muted">
-                        <Image src={item.image || "/placeholder.svg"} alt={item.title} fill className="object-cover" />
+                        <Image src={item.image ? encodeURI(item.image) : "/placeholder.svg"} alt={item.title} fill className="object-cover" unoptimized />
                       </div>
                       <div className="flex-1 space-y-2">
                         <h3 className="font-semibold text-lg">{item.title}</h3>

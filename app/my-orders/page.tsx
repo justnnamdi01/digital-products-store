@@ -111,10 +111,11 @@ export default function MyOrdersPage() {
                       <div key={item.id} className="flex flex-col sm:flex-row gap-4 p-4 border rounded-lg hover:bg-muted/50 transition-colors">
                         <div className="relative w-full sm:w-24 h-32 sm:h-24 flex-shrink-0">
                           <Image
-                            src={item.image || "/placeholder.jpg"}
+                            src={item.image ? encodeURI(item.image) : "/placeholder.jpg"}
                             alt={item.title}
                             fill
                             className="object-cover rounded"
+                            unoptimized
                           />
                         </div>
                         <div className="flex-1 min-w-0">

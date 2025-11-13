@@ -28,10 +28,11 @@ export function FeaturedCoursesPreview() {
             <div className="relative overflow-hidden rounded-lg border border-border bg-card hover:shadow-lg transition-all duration-300 hover:scale-105">
               <div className="relative aspect-[4/3] overflow-hidden">
                 <Image
-                  src={course.image || "/placeholder.svg"}
+                  src={course.image ? encodeURI(course.image) : "/placeholder.svg"}
                   alt={course.title}
                   fill
                   className="object-cover group-hover:scale-110 transition-transform duration-300"
+                  unoptimized
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>

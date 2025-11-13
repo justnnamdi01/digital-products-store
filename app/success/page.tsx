@@ -88,10 +88,11 @@ export default function SuccessPage() {
                       <div key={item.id} className="flex gap-4 p-4 border rounded-lg">
                         <div className="relative w-20 h-20 flex-shrink-0">
                           <Image
-                            src={item.image || "/placeholder.jpg"}
+                            src={item.image ? encodeURI(item.image) : "/placeholder.jpg"}
                             alt={item.title}
                             fill
                             className="object-cover rounded"
+                            unoptimized
                           />
                         </div>
                         <div className="flex-1 min-w-0">

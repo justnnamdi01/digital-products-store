@@ -39,10 +39,11 @@ export function ProductCard({ id, title, description, price, image, category, ra
         <Link href={`/product/${id}`}>
           <div className="relative aspect-square overflow-hidden bg-muted">
             <Image
-              src={image || "/placeholder.svg"}
+              src={image ? encodeURI(image) : "/placeholder.svg"}
               alt={title}
               fill
               className="object-cover hover:scale-105 transition-transform duration-300"
+              unoptimized
             />
           </div>
         </Link>
@@ -70,10 +71,11 @@ export function ProductCard({ id, title, description, price, image, category, ra
       <Link href={`/product/${id}`}>
         <div className="relative aspect-video overflow-hidden bg-muted">
           <Image
-            src={image || "/placeholder.svg"}
+            src={image ? encodeURI(image) : "/placeholder.svg"}
             alt={title}
             fill
             className="object-cover hover:scale-105 transition-transform duration-300"
+            unoptimized
           />
         </div>
       </Link>
