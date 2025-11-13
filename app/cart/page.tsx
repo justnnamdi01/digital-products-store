@@ -10,6 +10,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import Head from "next/head"
+import { encodeImageUrl } from "@/lib/utils/image-url"
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, getTotalPrice } = useCartStore()
@@ -77,7 +78,7 @@ export default function CartPage() {
                   <CardContent className="p-4">
                     <div className="flex gap-4">
                       <div className="relative w-24 h-24 flex-shrink-0 rounded-md overflow-hidden bg-muted">
-                        <Image src={item.image ? encodeURI(item.image) : "/placeholder.svg"} alt={item.title} fill className="object-cover" unoptimized />
+                        <Image src={item.image ? encodeImageUrl(item.image) : "/placeholder.svg"} alt={item.title} fill className="object-cover" unoptimized />
                       </div>
                       <div className="flex-1 space-y-2">
                         <h3 className="font-semibold text-lg">{item.title}</h3>

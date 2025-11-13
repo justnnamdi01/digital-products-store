@@ -10,6 +10,7 @@ import { downloadFile } from "@/lib/download-helper"
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { encodeImageUrl } from "@/lib/utils/image-url"
 
 export default function MyOrdersPage() {
   const { getAllOrders } = useOrdersStore()
@@ -111,7 +112,7 @@ export default function MyOrdersPage() {
                       <div key={item.id} className="flex flex-col sm:flex-row gap-4 p-4 border rounded-lg hover:bg-muted/50 transition-colors">
                         <div className="relative w-full sm:w-24 h-32 sm:h-24 flex-shrink-0">
                           <Image
-                            src={item.image ? encodeURI(item.image) : "/placeholder.jpg"}
+                            src={item.image ? encodeImageUrl(item.image) : "/placeholder.jpg"}
                             alt={item.title}
                             fill
                             className="object-cover rounded"

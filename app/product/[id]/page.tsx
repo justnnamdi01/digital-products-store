@@ -13,6 +13,7 @@ import { useCartStore } from "@/lib/cart-store"
 import { useToast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { getProductById } from "@/lib/products"
+import { encodeImageUrl } from "@/lib/utils/image-url"
 
 export default function ProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -138,7 +139,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                 <CardContent className="p-6 space-y-6">
                   <div className="relative aspect-video overflow-hidden rounded-lg bg-muted">
                     <Image
-                      src={product.image ? encodeURI(product.image) : "/placeholder.svg"}
+                      src={product.image ? encodeImageUrl(product.image) : "/placeholder.svg"}
                       alt={product.title}
                       fill
                       className="object-cover"

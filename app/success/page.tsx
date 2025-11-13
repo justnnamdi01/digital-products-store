@@ -10,6 +10,7 @@ import { useEffect, useState } from "react"
 import { useOrdersStore } from "@/lib/orders-store"
 import { downloadMultipleFiles } from "@/lib/download-helper"
 import Image from "next/image"
+import { encodeImageUrl } from "@/lib/utils/image-url"
 
 export default function SuccessPage() {
   const [latestOrder, setLatestOrder] = useState<any>(null)
@@ -88,7 +89,7 @@ export default function SuccessPage() {
                       <div key={item.id} className="flex gap-4 p-4 border rounded-lg">
                         <div className="relative w-20 h-20 flex-shrink-0">
                           <Image
-                            src={item.image ? encodeURI(item.image) : "/placeholder.jpg"}
+                            src={item.image ? encodeImageUrl(item.image) : "/placeholder.jpg"}
                             alt={item.title}
                             fill
                             className="object-cover rounded"

@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Star } from "lucide-react"
 import { useCartStore } from "@/lib/cart-store"
 import { useToast } from "@/hooks/use-toast"
+import { encodeImageUrl } from "@/lib/utils/image-url"
 
 interface ProductCardProps {
   id: string
@@ -39,7 +40,7 @@ export function ProductCard({ id, title, description, price, image, category, ra
         <Link href={`/product/${id}`}>
           <div className="relative aspect-square overflow-hidden bg-muted">
             <Image
-              src={image ? encodeURI(image) : "/placeholder.svg"}
+              src={image ? encodeImageUrl(image) : "/placeholder.svg"}
               alt={title}
               fill
               className="object-cover hover:scale-105 transition-transform duration-300"
@@ -71,7 +72,7 @@ export function ProductCard({ id, title, description, price, image, category, ra
       <Link href={`/product/${id}`}>
         <div className="relative aspect-video overflow-hidden bg-muted">
           <Image
-            src={image ? encodeURI(image) : "/placeholder.svg"}
+            src={image ? encodeImageUrl(image) : "/placeholder.svg"}
             alt={title}
             fill
             className="object-cover hover:scale-105 transition-transform duration-300"

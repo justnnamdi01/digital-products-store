@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { products } from "@/lib/products"
 import { ArrowRight, Star } from "lucide-react"
+import { encodeImageUrl } from "@/lib/utils/image-url"
 
 export function FeaturedCoursesPreview() {
   // Get featured courses
@@ -28,7 +29,7 @@ export function FeaturedCoursesPreview() {
             <div className="relative overflow-hidden rounded-lg border border-border bg-card hover:shadow-lg transition-all duration-300 hover:scale-105">
               <div className="relative aspect-[4/3] overflow-hidden">
                 <Image
-                  src={course.image ? encodeURI(course.image) : "/placeholder.svg"}
+                  src={course.image ? encodeImageUrl(course.image) : "/placeholder.svg"}
                   alt={course.title}
                   fill
                   className="object-cover group-hover:scale-110 transition-transform duration-300"

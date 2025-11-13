@@ -81,7 +81,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   >
                     <div className="relative w-20 h-20 flex-shrink-0 rounded overflow-hidden bg-muted">
                       <Image
-                        src={item.image ? encodeURI(item.image) : "/placeholder.svg"}
+                        src={item.image ? encodeImageUrl(item.image) : "/placeholder.svg"}
                         alt={item.title}
                         fill
                         className="object-cover"
