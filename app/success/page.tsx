@@ -31,13 +31,29 @@ export default function SuccessPage() {
           filename: `${item.title.substring(0, 50).replace(/[^a-zA-Z0-9]/g, '_')}.pdf`
         }))
       
+      console.log("[Success] Preparing auto-downloads", {
+        totalItems: order.items.length,
+        itemsWithLinks: filesToDownload.length,
+        timestamp: new Date().toISOString()
+      })
+      
       if (filesToDownload.length > 0) {
         // Start downloads after a short delay
-        setTimeout(() => {
-          downloadMultipleFiles(filesToDownload)
+        setTimeout(async () => {
+          const successCount = await downloadMultipleFiles(filesToDownload)
           setDownloading(false)
+          
+          console.log("[Success] Auto-download completed", {
+            attempted: filesToDownload.length,
+            successful: successCount,
+            timestamp: new Date().toISOString()
+          })
         }, 1000)
       } else {
+        console.warn("[Success] No files with download links", {
+          orderItems: order.items.length,
+          timestamp: new Date().toISOString()
+        })
         setDownloading(false)
       }
     }

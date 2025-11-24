@@ -128,9 +128,23 @@ export default function CheckoutPage() {
                   files: filesToDownload.map(f => f.filename),
                   timestamp: new Date().toISOString()
                 })
-                downloadMultipleFiles(filesToDownload)
+                const successCount = await downloadMultipleFiles(filesToDownload)
+                
+                if (successCount < filesToDownload.length) {
+                  console.warn("[Download] Some downloads may have failed", {
+                    attempted: filesToDownload.length,
+                    successful: successCount,
+                    timestamp: new Date().toISOString()
+                  })
+                  // Show message that files are available in My Orders
+                  alert(`Payment successful! ${successCount} of ${filesToDownload.length} files downloaded. You can download any missing files from "My Orders" page.`)
+                }
               } else {
-                console.warn("[Download] No files to download", { timestamp: new Date().toISOString() })
+                console.warn("[Download] No files to download", { 
+                  orderItemCount: savedOrder.items.length,
+                  timestamp: new Date().toISOString() 
+                })
+                alert("Payment successful! However, no download links were found for your products. Please contact support.")
               }
               
               clearCart()

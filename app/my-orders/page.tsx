@@ -33,25 +33,41 @@ export default function MyOrdersPage() {
   }
 
   const handleDownload = (item: any) => {
-    if (!item.downloadLink) {
-      alert("Download link not available for this product.")
+    console.log("[MyOrders] Download requested", { 
+      itemId: item.id, 
+      title: item.title,
+      downloadLink: item.downloadLink,
+      hasLink: !!item.downloadLink
+    })
+    
+    if (!item.downloadLink || item.downloadLink === "") {
+      console.error("[MyOrders] Download link missing", { 
+        itemId: item.id, 
+        title: item.title,
+        category: item.category
+      })
+      alert(`Download link not available for "${item.title}". Please contact support at 24digitalmarket@gmail.com with your order number.`)
       return
     }
     
     const filename = `${item.title.substring(0, 50).replace(/[^a-zA-Z0-9]/g, '_')}.pdf`
-    downloadFile(item.downloadLink, filename)
+    const success = downloadFile(item.downloadLink, filename)
     
-    // Mark as downloaded
-    setDownloadedItems(prev => new Set([...prev, item.id]))
-    
-    // Show success message
-    setTimeout(() => {
-      setDownloadedItems(prev => {
-        const newSet = new Set(prev)
-        newSet.delete(item.id)
-        return newSet
-      })
-    }, 3000)
+    if (success) {
+      // Mark as downloaded
+      setDownloadedItems(prev => new Set([...prev, item.id]))
+      
+      // Show success message for 3 seconds
+      setTimeout(() => {
+        setDownloadedItems(prev => {
+          const newSet = new Set(prev)
+          newSet.delete(item.id)
+          return newSet
+        })
+      }, 3000)
+    } else {
+      alert("Download failed. Please try again or contact support.")
+    }
   }
 
   if (orders.length === 0) {
