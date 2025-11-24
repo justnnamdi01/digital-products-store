@@ -170,7 +170,7 @@ export default function SuccessPage() {
                   </p>
                   <p className="text-sm text-yellow-800 dark:text-yellow-200 mb-3">
                     If the automatic download didn't work or you can't find your files, don't worry! All your purchased products are available in your account. Simply click the button below to go to "My Orders" where you can download any product with a single click.
-                  </p>
+          </p>
                   <Link href="/my-orders">
                     <Button className="bg-yellow-600 hover:bg-yellow-700 text-white">
                       <Download className="h-4 w-4 mr-2" />

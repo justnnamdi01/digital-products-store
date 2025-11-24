@@ -42,16 +42,28 @@ export default function CheckoutPage() {
     return () => {
       // Safely remove script only if it exists and is still a child
       if (script && document.body.contains(script)) {
-        document.body.removeChild(script)
+      document.body.removeChild(script)
       }
     }
   }, [items, router])
 
   useEffect(() => {
     if (paypalLoaded && window.paypal) {
+      console.log("[PayPal] Initializing PayPal buttons", {
+        totalPrice: getTotalPrice(),
+        itemCount: items.length,
+        timestamp: new Date().toISOString()
+      })
+
       window.paypal
         .Buttons({
           createOrder: (data: any, actions: any) => {
+            console.log("[PayPal] Creating order", {
+              amount: getTotalPrice().toFixed(2),
+              items: items.map(i => ({ id: i.id, title: i.title, price: i.price, qty: i.quantity })),
+              timestamp: new Date().toISOString()
+            })
+
             return actions.order.create({
               purchase_units: [
                 {
@@ -63,44 +75,98 @@ export default function CheckoutPage() {
             })
           },
           onApprove: async (data: any, actions: any) => {
-            setLoading(true)
-            const order = await actions.order.capture()
-            console.log("Order successful:", order)
-            
-            // Save order to orders store
-            const orderItems = items.map(item => {
-              const product = getProductById(item.id)
-              return {
-                id: item.id,
-                title: item.title,
-                price: item.price,
-                image: item.image,
-                quantity: item.quantity,
-                category: product?.category || "COURSES",
-              }
+            console.log("[PayPal] Payment approved, capturing order", {
+              orderID: data.orderID,
+              payerID: data.payerID,
+              timestamp: new Date().toISOString()
             })
-            const savedOrder = addOrder(orderItems, getTotalPrice())
 
-            // Trigger downloads immediately
-            const filesToDownload = savedOrder.items
-              .filter((it: any) => it.downloadLink)
-              .map((it: any) => ({
-                url: it.downloadLink,
-                filename: `${it.title.substring(0, 50).replace(/[^a-zA-Z0-9]/g, '_')}.pdf`
-              }))
-            if (filesToDownload.length > 0) {
-              downloadMultipleFiles(filesToDownload)
-            }
+            setLoading(true)
             
-            clearCart()
-            // Give the browser a moment to start the downloads before navigating
-            setTimeout(() => router.push("/my-orders"), 400)
+            try {
+              const order = await actions.order.capture()
+              console.log("[PayPal] Order captured successfully", {
+                orderID: order.id,
+                status: order.status,
+                amount: order.purchase_units[0].amount.value,
+                payer: order.payer.email_address,
+                timestamp: new Date().toISOString()
+              })
+              
+              // Save order to orders store
+              const orderItems = items.map(item => {
+                const product = getProductById(item.id)
+                return {
+                  id: item.id,
+                  title: item.title,
+                  price: item.price,
+                  image: item.image,
+                  quantity: item.quantity,
+                  category: product?.category || "COURSES",
+                }
+              })
+              const savedOrder = addOrder(orderItems, getTotalPrice())
+              
+              console.log("[Order] Order saved to local storage", {
+                orderId: savedOrder.id,
+                itemCount: savedOrder.items.length,
+                total: savedOrder.total,
+                timestamp: new Date().toISOString()
+              })
+
+              // Trigger downloads immediately
+              const filesToDownload = savedOrder.items
+                .filter((it: any) => it.downloadLink)
+                .map((it: any) => ({
+                  url: it.downloadLink,
+                  filename: `${it.title.substring(0, 50).replace(/[^a-zA-Z0-9]/g, '_')}.pdf`
+                }))
+              
+              if (filesToDownload.length > 0) {
+                console.log("[Download] Initiating downloads", {
+                  fileCount: filesToDownload.length,
+                  files: filesToDownload.map(f => f.filename),
+                  timestamp: new Date().toISOString()
+                })
+                downloadMultipleFiles(filesToDownload)
+              } else {
+                console.warn("[Download] No files to download", { timestamp: new Date().toISOString() })
+              }
+              
+              clearCart()
+              console.log("[Cart] Cart cleared", { timestamp: new Date().toISOString() })
+              
+              // Give the browser a moment to start the downloads before navigating
+              setTimeout(() => {
+                console.log("[Navigation] Redirecting to My Orders", { timestamp: new Date().toISOString() })
+                router.push("/my-orders")
+              }, 400)
+            } catch (error) {
+              console.error("[PayPal] Error capturing order", {
+                error: error,
+                errorMessage: error instanceof Error ? error.message : String(error),
+                timestamp: new Date().toISOString()
+              })
+              alert("Payment processing error. Please contact support.")
+              setLoading(false)
+            }
           },
           onError: (err: any) => {
-            console.error("PayPal error:", err)
-            alert("Payment failed. Please try again.")
+            console.error("[PayPal] Payment error", {
+              error: err,
+              errorMessage: err?.message || String(err),
+              timestamp: new Date().toISOString()
+            })
+            alert("Payment failed. Please try again or contact support.")
             setLoading(false)
           },
+          onCancel: (data: any) => {
+            console.log("[PayPal] Payment cancelled by user", {
+              orderID: data?.orderID,
+              timestamp: new Date().toISOString()
+            })
+            setLoading(false)
+          }
         })
         .render("#paypal-button-container")
     }
@@ -118,37 +184,16 @@ export default function CheckoutPage() {
           <div className="lg:col-span-2 space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Billing Information</CardTitle>
+                <CardTitle>Contact Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input id="firstName" placeholder="John" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input id="lastName" placeholder="Doe" />
-                  </div>
-                </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="john@example.com" />
+                  <Label htmlFor="email">Email Address (for order confirmation)</Label>
+                  <Input id="email" type="email" placeholder="your@email.com" />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="address">Address</Label>
-                  <Input id="address" placeholder="123 Main St" />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="city">City</Label>
-                    <Input id="city" placeholder="New York" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="zip">ZIP Code</Label>
-                    <Input id="zip" placeholder="10001" />
-                  </div>
-                </div>
+                <p className="text-sm text-muted-foreground">
+                  Your purchase details and download links will be sent to this email.
+                </p>
               </CardContent>
             </Card>
 

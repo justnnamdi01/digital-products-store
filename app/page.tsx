@@ -57,7 +57,7 @@ export default function HomePage() {
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <Filter className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm font-medium">Category:</span>
-                </div>
+              </div>
                 <div className="flex gap-2">
                   <Button
                     variant={selectedCategory === "all" ? "default" : "outline"}
@@ -76,7 +76,7 @@ export default function HomePage() {
                       {category}
                     </Button>
                   ))}
-                </div>
+          </div>
               </div>
 
               {/* Subcategories for COURSES */}
@@ -84,7 +84,7 @@ export default function HomePage() {
                 <div className="flex items-center gap-4 overflow-x-auto pl-6 border-l-2 border-primary/30">
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <span className="text-sm font-medium">Courses:</span>
-                  </div>
+              </div>
                   <div className="flex gap-2">
                     <Button
                       variant={!selectedSubcategory ? "default" : "outline"}
@@ -103,8 +103,8 @@ export default function HomePage() {
                         {subcategory}
                       </Button>
                     ))}
-                  </div>
-                </div>
+              </div>
+              </div>
               )}
             </div>
           </div>
@@ -116,13 +116,13 @@ export default function HomePage() {
             {filteredProducts.length === 0 ? (
               <div className="text-center py-16">
                 <p className="text-lg text-muted-foreground">No products found in this category.</p>
-              </div>
+            </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} {...product} />
-                ))}
-              </div>
+                <ProductCard key={product.id} {...product} />
+              ))}
+            </div>
             )}
           </div>
         </section>
