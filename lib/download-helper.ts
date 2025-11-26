@@ -40,21 +40,21 @@ export function getDownloadPath(productTitle: string, category: string): string 
     "5000+ udemy": "/WEBSITE SOURCE/RESELL BUNDLE/5000+ UDEMY COURSES/DOWNLOAD LINK/UdemyCourseBundle.pdf",
     "80,000 mega bundle tumbler": "/WEBSITE SOURCE/RESELL BUNDLE/80,000 Tumbler Bundle/DOWNLOAD LINK/TumblersBundle.pdf",
     
-    // T-SHIRT DESIGN - Add more comprehensive matching
+    // T-SHIRT DESIGN - Mix of PDF and TXT files with Google Drive links
     "1000+ design bundle": "/WEBSITE SOURCE/T-SHIRT DESIGN/1000+ Design Bundle High Resolution Tshirt Designs/Urban2023Banner.pdf",
     "10k+ anime": "/WEBSITE SOURCE/T-SHIRT DESIGN/10K+ Anime design png/DOWNLOAD LINK/Anime-Design-Bundle-x6mq9z.pdf",
     "1300 t-shirt unique car": "/WEBSITE SOURCE/T-SHIRT DESIGN/1300 T-Shirt Unique Car Bundle PNG Files/DOWNLOAD LINK/UNIQUECARS.pdf",
     "70+ pop culture": "/WEBSITE SOURCE/T-SHIRT DESIGN/70+ pop culture T-Shirt Designs - PNG/DOWNLOAD LINK/popculturebundlelink.pdf",
-    "set of 300 summer bundle": "/WEBSITE SOURCE/T-SHIRT DESIGN/Set of 300 Summer Bundle SVG/DOWNLOAD LINK/SummerBundle.pdf",
-    "png puppy dog stock": "/WEBSITE SOURCE/T-SHIRT DESIGN/PNG Puppy Dog Stock Design Bundle/DOWNLOAD LINK/PuppyDogBundle.pdf",
-    "new york city": "/WEBSITE SOURCE/T-SHIRT DESIGN/New York city, Brooklyn design bundle/DOWNLOAD LINK/NYCBrooklynBundle.pdf",
-    "brooklyn design": "/WEBSITE SOURCE/T-SHIRT DESIGN/New York city, Brooklyn design bundle/DOWNLOAD LINK/NYCBrooklynBundle.pdf",
-    "flower street wear": "/WEBSITE SOURCE/T-SHIRT DESIGN/Flower street wear design bundle/DOWNLOAD LINK/FlowerStreetwearBundle.pdf",
-    "couple svg bundle": "/WEBSITE SOURCE/T-SHIRT DESIGN/Couple SVG Bundle/DOWNLOAD LINK/CoupleSVGBundle.pdf",
-    "butterflies street wear": "/WEBSITE SOURCE/T-SHIRT DESIGN/Butterflies street wear design bundle/DOWNLOAD LINK/ButterfliesStreetwearBundle.pdf",
-    "bear street wear": "/WEBSITE SOURCE/T-SHIRT DESIGN/Bear street wear design bundle/DOWNLOAD LINK/BearStreetwearBundle.pdf",
-    "150+ car t-shirt": "/WEBSITE SOURCE/T-SHIRT DESIGN/150+ Car T-Shirt Designs/DOWNLOAD LINK/CarTShirtDesigns.pdf",
-    "180+ smiley urban": "/WEBSITE SOURCE/T-SHIRT DESIGN/180+ Smiley Urban/DOWNLOAD LINK/SmileyUrbanBundle.pdf",
+    "set of 300 summer bundle": "/WEBSITE SOURCE/T-SHIRT DESIGN/Set of 300 Summer Bundle SVG, Beach Svg/beachsummerfile.txt",
+    "png puppy dog stock": "/WEBSITE SOURCE/T-SHIRT DESIGN/PNG Puppy Dog Stock Design Bundle/DOWNLOAD LINK/dogs design.txt",
+    "new york city": "/WEBSITE SOURCE/T-SHIRT DESIGN/New York city, Brooklyn design bundle/DOWNLOAD LINK/new york DownloadlinkHere.txt",
+    "brooklyn design": "/WEBSITE SOURCE/T-SHIRT DESIGN/New York city, Brooklyn design bundle/DOWNLOAD LINK/new york DownloadlinkHere.txt",
+    "flower street wear": "/WEBSITE SOURCE/T-SHIRT DESIGN/Flower street wear design bundle/DOWLOAD LINK/flower design.txt",
+    "couple svg bundle": "/WEBSITE SOURCE/T-SHIRT DESIGN/Couple SVG Bundle/DOWNLOAD LINK.txt",
+    "butterflies street wear": "/WEBSITE SOURCE/T-SHIRT DESIGN/Butterflies street wear design bundle/DOWNLOAD LINK/butterfly DownloadlinkHere.txt",
+    "bear street wear": "/WEBSITE SOURCE/T-SHIRT DESIGN/Bear street wear design bundle/DOWNLOAD LINK/TEDDY BEAR DownloadlinkHere.txt",
+    "150+ car t-shirt": "/WEBSITE SOURCE/T-SHIRT DESIGN/150+ Car T-Shirt Designs/DOWNLOAD LINK/Car-DESIGNS-DOWNLOADLINK.txt",
+    "180+ smiley urban": "/WEBSITE SOURCE/T-SHIRT DESIGN/180+ Smiley Urban   Format  PNG EPS/DOWNLOAD LINK/SMILEY DESIGN.txt",
   }
   
   // Find matching download path using normalized titles
@@ -86,11 +86,19 @@ export function downloadFile(url: string, filename: string): boolean {
       return false
     }
     
+    // Check if this is a TXT file with download instructions
+    const isTxtFile = url.toLowerCase().endsWith('.txt')
+    
     const link = document.createElement('a')
     link.href = url
-    link.download = filename
     link.target = '_blank'
     link.rel = 'noopener noreferrer'
+    
+    // For TXT files, open in new tab instead of downloading
+    // For PDF files, trigger download
+    if (!isTxtFile) {
+      link.download = filename
+    }
     
     // Make link invisible
     link.style.display = 'none'
@@ -101,7 +109,18 @@ export function downloadFile(url: string, filename: string): boolean {
     setTimeout(() => {
       try {
         link.click()
-        console.log("[DownloadHelper] Download initiated successfully", { url, filename })
+        console.log("[DownloadHelper] Download initiated successfully", { 
+          url, 
+          filename,
+          type: isTxtFile ? 'TXT (opens in new tab)' : 'PDF (downloads)'
+        })
+        
+        // Show user-friendly message for TXT files
+        if (isTxtFile) {
+          setTimeout(() => {
+            alert("📄 Download instructions opened in a new tab!\n\nThe file contains a Google Drive link where you can download your product files.\n\nIf the tab didn't open, please check your popup blocker settings.")
+          }, 500)
+        }
       } catch (clickError) {
         console.error("[DownloadHelper] Click failed", { clickError, url, filename })
       } finally {
